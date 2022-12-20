@@ -1,16 +1,21 @@
 package com.owen2k6;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.awt.*;
+import java.util.Objects;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class ll  extends JavaPlugin implements Listener {
+public class ll extends JavaPlugin implements Listener {
     private static ll plugin;
     private PLConfig config;
+    private Logger log;
+
 
     @Override
     public void onDisable() {
@@ -20,13 +25,20 @@ public class ll  extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         plugin = this;
+        log = Bukkit.getServer().getLogger();
         config = new PLConfig();
-        getServer().getLogger().log(Level.INFO, "Starting up login logger");
+        logInfo(Level.INFO, "Starting up login logger.");
+        if (Objects.equals(config.getStringOption("webhook.url"), "CHANGEME") || config.getStringOption("webhook.url").isEmpty()) {
+            logInfo(Level.WARNING, "Please enter a URL for us to push webhooks to.");
+            logInfo(Level.WARNING, "Edit in plugins/LL/config.yml");
+            logInfo(Level.WARNING, "Its always best to configure your plugins!");
+            Bukkit.getServer().getPluginManager().disablePlugin(plugin);
+        }
         getServer().getPluginManager().registerEvents(new ll(), this);
     }
 
     @EventHandler
-    public void onPlayerLogin(PlayerLoginEvent event){
+    public void onPlayerLogin(PlayerLoginEvent event) {
         try {
             if (config == null) config = new PLConfig();
             DiscordWebhook webhook = new DiscordWebhook(config.getStringOption("webhook.url"));
@@ -42,10 +54,13 @@ public class ll  extends JavaPlugin implements Listener {
                     .addField("IP", event.getAddress().toString(), true)
                     .setFooter(config.getStringOption("webhook.footer", "Owen2k6 Login logger ;)"), null));
             webhook.execute(); //Handle exception
-            //getServer().getLogger().log(Level.INFO, "Login logged to webhook.");
-        }catch (Exception e){
-            //getServer().getLogger().log(Level.SEVERE, "Fuck man it broke. Anyways here is what fucked up: " + e);
+            logInfo(Level.INFO, "Login logged to webhook.");
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void logInfo(Level level, String s) {
+        log.log(level, "[Login Logger] " + s);
     }
 }

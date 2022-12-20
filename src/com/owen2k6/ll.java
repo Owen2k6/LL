@@ -49,7 +49,7 @@ public class ll  extends JavaPlugin implements Listener {
             webhook.execute(); //Handle exception
             getServer().getLogger().log(Level.INFO, "Login logged to webhook.");
         }catch (Exception e){
-            getServer().getLogger().log(Level.SEVERE, "Fuck man it broke. Anyways here is what fucked up: " + e);
+            //getServer().getLogger().log(Level.SEVERE, "Fuck man it broke. Anyways here is what fucked up: " + e);
         }
     }
 }

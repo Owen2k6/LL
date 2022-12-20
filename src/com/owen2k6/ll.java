@@ -19,14 +19,15 @@ public class ll  extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         getServer().getLogger().log(Level.INFO, "Starting up login logger");
+        getServer().getPluginManager().registerEvents(new ll(), this);
 
         }
 
 
     @EventHandler
-    public void onPlayerLogin(PlayerLoginEvent event) throws IOException {
+    public void onPlayerLogin(PlayerLoginEvent event){
         try {
-            DiscordWebhook webhook = new DiscordWebhook("https://discordapp.com/api/webhooks/...");
+            DiscordWebhook webhook = new DiscordWebhook("YOUR WEBHOOK GOES HERE!");
             webhook.setUsername("Login Logger");
             webhook.setTts(false);
             webhook.addEmbed(new DiscordWebhook.EmbedObject()
@@ -37,8 +38,6 @@ public class ll  extends JavaPlugin implements Listener {
                     .addField("Kick Message", event.getKickMessage(), true)
                     .addField("IP", event.getAddress().toString(), true)
                     .setFooter("Owen2k6 Login logger ;)", null));
-            webhook.addEmbed(new DiscordWebhook.EmbedObject()
-                    .setDescription("Just another added embed object!"));
             webhook.execute(); //Handle exception
         }catch (Exception e){
             getServer().getLogger().log(Level.SEVERE, "Fuck man it broke. Anyways here is what fucked up: " + e);

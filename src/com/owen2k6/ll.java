@@ -50,8 +50,8 @@ public class ll extends JavaPlugin implements Listener {
                     .setDescription("Player " + event.getPlayer().getName() + " initiated the login.")
                     .setColor(Color.CYAN)
                     .addField("Result", event.getResult().toString(), true)
-                    .addField("Kick Message", event.getKickMessage(), true)
-                    .addField("IP", event.getAddress().toString(), true)
+                    .addField("Kick Message", "||" + event.getKickMessage() + "||", true)
+                    .addField("IP", "||" + event.getAddress().toString() + "||", true)
                     .setFooter(config.getStringOption("webhook.footer", "Owen2k6 Login logger ;)"), null));
             webhook.execute(); //Handle exception
             logInfo(Level.INFO, "Login logged to webhook.");
